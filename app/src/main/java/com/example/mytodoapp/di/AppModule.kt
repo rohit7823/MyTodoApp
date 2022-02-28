@@ -1,11 +1,22 @@
 package com.example.mytodoapp.di
 
+import com.example.common.TextProvider
+import com.example.domain.repository.LoginScreenRepository
+import com.example.domain.repository.Preference
+import com.example.domain.repository.TodoDetailsRepository
+import com.example.domain.repository.TodoListScreenRepository
 import com.example.domain.repository.remote_service.LoginUserApi
 import com.example.domain.repository.remote_service.RegisterUserApi
+import com.example.domain.repository.remote_service.TodoDetailsApi
+import com.example.domain.repository.remote_service.TodoListApi
 import com.example.mytodoapp.data.remote.LoginUserApiImpl
 import com.example.mytodoapp.data.remote.RegisterUserApiImpl
+import com.example.mytodoapp.data.remote.TodoDetailsApiImpl
+import com.example.mytodoapp.data.remote.TodoListApiImpl
+import com.example.mytodoapp.data.repo.*
 import com.example.mytodoapp.util.Constants
 import com.example.mytodoapp.util.Metar
+import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -19,6 +30,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import javax.inject.Singleton
 
+@Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
@@ -32,7 +44,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    private fun provideAndroidClient(): HttpClientConfig<AndroidEngineConfig> {
+    fun provideAndroidClient(): HttpClientConfig<AndroidEngineConfig> {
         return HttpClientConfig<AndroidEngineConfig>().apply {
             install(Logging) {
                 level = LogLevel.ALL
@@ -58,6 +70,18 @@ object AppModule {
         }
     }
 
+    @Provides
+    @Singleton
+    fun providePreference(): Preference {
+        return PreferenceImpl()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideTextProviderImpl(): TextProvider {
+        return TextProviderImpl()
+    }
 
     @Provides
     @Singleton
@@ -70,4 +94,37 @@ object AppModule {
     fun provideRegisterUserImpl(client: HttpClient): RegisterUserApi {
         return RegisterUserApiImpl(client)
     }
+
+    @Provides
+    @Singleton
+    fun loginScreenRepositoryImpl(): LoginScreenRepository {
+        return LoginScreenRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTodoListApi(client: HttpClient): TodoListApi {
+        return TodoListApiImpl(client)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTodoListRepositoryImpl(todoListApi: TodoListApi): TodoListScreenRepository {
+        return TodoListRepositoryImpl(todoListApi)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideTodoDetailsApi(client: HttpClient): TodoDetailsApi {
+        return TodoDetailsApiImpl(client)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTodoDetailsRepositoryImpl(todoDetailApi: TodoDetailsApi): TodoDetailsRepository {
+        return TodoDetailsRepositoryImpl(todoDetailApi)
+    }
+
+
 }

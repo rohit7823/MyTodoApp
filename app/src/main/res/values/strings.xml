@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">My Todo App</string>
     <string name="error_string">Error</string>
+    <string name="something_went_wrong">Something went wrong.</string>
+    <string name="enter_user_id">Enter user id</string>
+    <string name="enter_password">Enter password</string>
+    <string name="login">Login</string>
+    <string name="login_successfull">Login successfull</string>
+    <string name="please_fill_all_fields">Please fill all fields.</string>
+    <string name="sign_in">Sign In</string>
 </resources>
